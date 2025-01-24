@@ -18,10 +18,10 @@ class TodoRequest {
     var name: String = ""
 }
 
-class TodoItem{
-    var PK: String = ""
-    var text: String = ""
-}
+data class TodoItem(
+    val PK: String = "",
+    val text: String = ""
+)
 
 @RestController
 class TodoController {
@@ -105,21 +105,20 @@ class TodoController {
         val responce = client.scan(request)
         val items: List<Map<String, AttributeValue>> = responce.items().toList()
 
-        val resultItems = mutableListOf<TodoItem>()
-        for (item in items) {
-            println("get item ${item}")
-            val resultPK = item["PK"]!!.s()
-            val resultText = item["text"]!!.s()
-            println("get resultPK ${resultPK}")
-
-            val todoItem = TodoItem()
-            todoItem.PK = resultPK
-            todoItem.text = resultText
-
-            resultItems.add(todoItem)
+        val resultItems = items.map {
+            TodoItem(
+                PK = it["PK"]!!.s(),//引数が一つの場合はit
+                text = it["text"]!!.s()
+            )
         }
 
-        println("get resultItems ${resultItems}")
+//        val resultItems = items.map ( {item ->
+//            val todoItem = TodoItem()
+//            todoItem.PK = item["PK"]!!.s()
+//            todoItem.text = item["text"]!!.s()
+//            todoItem
+//        })
+
         return resultItems
     }
 }

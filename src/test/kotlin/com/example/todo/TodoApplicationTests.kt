@@ -67,6 +67,14 @@ class TodoApplicationTests {
 		}
 	}
 
+	fun putItem(tableName:String, item:Map<String, AttributeValue>) {
+		val putItemRequest = PutItemRequest.builder()
+			.tableName("test")
+			.item(item)
+			.build()
+		client.putItem(putItemRequest)
+	}
+
 	@Test
 	fun `todoエンドポイントにfooというJSONをPOSTしてfooがdbにあるか確認`() {
 
@@ -150,18 +158,19 @@ class TodoApplicationTests {
 
 		val item: Map<String, AttributeValue> = mapOf(
 			"PK" to AttributeValue.fromS(UUID.randomUUID().toString()),
-			"text" to AttributeValue.fromS("test123")
+			"text" to AttributeValue.fromS("test456")
 		)
 
-		val putItemRequest = PutItemRequest.builder()
-			.tableName("test")
-			.item(item)
-			.build()
-		client.putItem(putItemRequest)
+		putItem("test", item)
+//		val putItemRequest = PutItemRequest.builder()
+//			.tableName("test")
+//			.item(item)
+//			.build()
+//		client.putItem(putItemRequest)
 
 		mockMvc.perform(get("/todo"))
 			.andExpect(status().isOk)
 			.andExpect(jsonPath("$.length()").value(1))
-			.andExpect(jsonPath("$[0].text").value("test123"))
+			.andExpect(jsonPath("$[0].text").value("test456"))
 	}
 }
