@@ -21,7 +21,7 @@ import java.util.*
 interface TodoRepository {
     fun getAllItems(): List<TodoItem>
     fun addNewItem(todoRequest: TodoRequest):String
-    fun deleteItem(id: String):String
+    fun deleteItem(id: String):
 }
 
 @Repository
@@ -34,11 +34,16 @@ class DefaultTodoRepository(
     val client: DynamoDbClient
 
     init {
-        client = DynamoDbClient.builder()
+        println("dynamodbURL**********$dynamodbURL")
+        val builder = DynamoDbClient.builder()
+            .region(Region.AP_NORTHEAST_1)
+        if(dynamodbURL != "default") {
+            builder
             .endpointOverride(URI.create(dynamodbURL))
             .credentialsProvider(AnonymousCredentialsProvider.create())
-            .region(Region.AP_NORTHEAST_1)
-            .build()
+
+        }
+           this.client = builder.build()
 
     }
 

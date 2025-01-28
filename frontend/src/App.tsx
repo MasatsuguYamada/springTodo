@@ -26,7 +26,7 @@ const [text, setText] = useState("")
           <>
             <div key={index}>
               <h2>{index +1}番目のデータ</h2>
-              <div>{todoItem.PK}</div>
+              {/*<div>{todoItem.PK}</div>*/}
               <div>{todoItem.text}</div>
             </div>
           </>

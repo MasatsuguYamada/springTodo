@@ -4,5 +4,5 @@ spring:
 
 
 aws:
-  dynamodb-url: http://localhost:4566
-  table-name: LocalTodoTable
+  dynamodb-url: ${AWS_DYNAMODB_URL:default}
+  table-name: ${AWS_DYNAMODB_TABLE_NAME:LocalTodoTable}
