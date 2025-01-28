@@ -63,5 +63,14 @@ describe("App", () => {
       expect(screen.getByText("Hello World")).not.toBeNull()
     })
   })
+
+  test("click delete then data disappears", () => {
+    const spyGet = vi.spyOn(axios, "get")
+      .mockResolvedValueOnce({data: [{pk:"12345", text: "Hello"}]})
+      .mockResolvedValueOnce({data: []})
+
+    const spyDelete = vi.spyOn(axios,"delete").mockResolvedValue(undefined)
+    render(<App />)
+  })
 })
 
