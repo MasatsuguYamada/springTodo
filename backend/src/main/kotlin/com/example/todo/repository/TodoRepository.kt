@@ -3,26 +3,34 @@ package com.example.todo.repository
 import com.example.todo.TodoItem
 import com.example.todo.TodoRequest
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Repository
 import org.springframework.web.bind.annotation.*
 import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.DeleteItemRequest
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
-import software.amazon.awssdk.services.dynamodb.model.ScanRequest
+import software.amazon.awssdk.services.dynamodb.model.*
 import java.net.URI
 import java.util.*
+import com.jayway.jsonpath.JsonPath
 
 interface TodoRepository {
     fun getAllItems(): List<TodoItem>
     fun addNewItem(todoRequest: TodoRequest):String
-    fun deleteItem(id: String):
+    fun deleteItem(id: String):String
+    fun updateItem(todoItem: TodoItem):String
 }
+
+//data class PutItem(
+//    val text: String,
+//    val pk: String,
+//)
 
 @Repository
 class DefaultTodoRepository(
@@ -40,7 +48,7 @@ class DefaultTodoRepository(
         if(dynamodbURL != "default") {
             builder
             .endpointOverride(URI.create(dynamodbURL))
-            .credentialsProvider(AnonymousCredentialsProvider.create())
+            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("aaa", "aaa")))
 
         }
            this.client = builder.build()
@@ -53,7 +61,7 @@ class DefaultTodoRepository(
                 .tableName(tableName)
                 .build()
         ).items()
-
+        println("read override fun $items")
         return items.map {
             TodoItem(
                 key = it["PK"]!!.s(),
@@ -64,8 +72,8 @@ class DefaultTodoRepository(
 
     override fun addNewItem(todoRequest: TodoRequest): String {
         val newPk = UUID.randomUUID()
-        client.putItem(
-            PutItemRequest.builder()
+
+        val putRequest = PutItemRequest.builder()
                 .tableName(tableName)
                 .item(
                     mapOf(
@@ -74,15 +82,62 @@ class DefaultTodoRepository(
                     )
                 )
                 .build()
-        )
+        client.putItem(putRequest)
         return newPk.toString()
     }
 
     override fun deleteItem(id: String): String {
-        TODO("Not yet implemented")
+        println("override fun DELETE id$id")
+
+        val deleteRequest = DeleteItemRequest.builder()
+            .tableName(tableName)
+            .key(mapOf("PK" to AttributeValue.builder().s(id).build()))
+            .build()
+        client.deleteItem(deleteRequest)
+        return ""
+    }
+
+    override fun updateItem(todoItem: TodoItem): String {
+        println("override fun UPDATE")
+        val textValue = JsonPath.read<String>(todoItem.text, "$.text")
+
+        val updateRequest = UpdateItemRequest.builder()
+            .tableName(tableName)
+            .key(mapOf("PK" to AttributeValue.builder().s(todoItem.key).build()))
+            .attributeUpdates(
+                mapOf(
+                    "text" to AttributeValueUpdate.builder()
+                        .value(AttributeValue.builder().s(textValue).build())
+                        .action(AttributeAction.PUT)
+                        .build(),
+                )
+            )
+//            .updateExpression("SET t = :newText")  // 更新する属性とその新しい値
+//            .expressionAttributeNames(
+//                mapOf(
+//                    "#t" to "text" // #textは実際の属性名"text"を指します
+//                )
+//            )
+//            .expressionAttributeValues(
+//                mapOf(
+//                    "text" to AttributeValue.builder().s(textValue).build()  // 新しいテキストの値を設定
+//                )
+//            )
+            .build()
+        client.updateItem(updateRequest)
+        return ""
     }
 
 }
+
+
+
+
+
+
+
+
+
 
 //@RestController
 class TodoRepositoryImpl {
@@ -121,7 +176,7 @@ class TodoRepositoryImpl {
 
     @GetMapping("/todo")
     fun getTodoItem(): List<TodoItem> {
-
+println("read impl function")
         val client = DynamoDbClient.builder()
             .endpointOverride(URI.create("http://localhost:4566"))
             .credentialsProvider(AnonymousCredentialsProvider.create())
@@ -132,8 +187,8 @@ class TodoRepositoryImpl {
             .tableName("test")
             .build()
 
-        val responce = client.scan(request)
-        val items: List<Map<String, AttributeValue>> = responce.items().toList()
+        val response = client.scan(request)
+        val items: List<Map<String, AttributeValue>> = response.items().toList()
 
         val resultItems = items.map {
             TodoItem(

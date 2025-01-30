@@ -71,6 +71,7 @@ class TodoControllerTest {
         Mockito.`when`(
             mockTodoRepository.deleteItem("12345")
         ).thenReturn(
+            "12345"
         )
         Mockito.`when`(
             mockTodoRepository.getAllItems()

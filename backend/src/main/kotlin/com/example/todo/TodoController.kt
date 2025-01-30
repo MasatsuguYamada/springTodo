@@ -38,6 +38,7 @@ class TodoController (
 
     @GetMapping("/todo/{id}")
     fun getItemById (@PathVariable id: String): ResponseEntity<TodoItem> {
+        println("read controller GET id")
        return ResponseEntity(null, HttpStatus.OK)
     }
 
@@ -48,13 +49,17 @@ class TodoController (
     }
 
     @PutMapping("/todo/{id}")
-    fun updateItem(@PathVariable PK: String,
-                   @RequestBody todo: TodoRequest): ResponseEntity<String> {
-        return ResponseEntity(HttpStatus.NOT_FOUND)
+    fun updateItem(@PathVariable id: String,
+                   @RequestBody todo: String): ResponseEntity<String> {
+        println("controller PUT")
+        todoRepository.updateItem(TodoItem(id, todo))
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @DeleteMapping("/todo/{id}")
     fun deleteItemById (@PathVariable id:String):String {
+        println("controller DELETE")
+        todoRepository.deleteItem(id)
         return ""
     }
 }
