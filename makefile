@@ -27,3 +27,5 @@ start-docker-compose:
 test-frontend:
 	echo "frontend test*************"
 	cd frontend && npm install && npm run test
+
+157094121738.dkr.ecr.ap-northeast-1.amazonaws.com/tsugu/todo:latest
