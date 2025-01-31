@@ -13,4 +13,4 @@ start-docker-compose:
 	docker compose up -d
 
 test-frontend:
-	cd frontend && npm run test
+	cd frontend && npm install && npm run test
