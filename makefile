@@ -12,7 +12,7 @@ build-backend:build-frontend
 
 build-frontend:
 	echo "frontend build*************";
-	cd frontend && npm init && npm run build;
+	cd frontend && npm install && npm run build;
 	cp -rf frontend/dist/* backend/src/main/resources/static
 
 test-all:test-backend test-frontend
