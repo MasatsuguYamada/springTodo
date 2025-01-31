@@ -55,10 +55,6 @@ jobs:
       - name: Run Tests
         run: make test-all
 
-      - name: Build frontend
-        run: make build
-
-
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -81,11 +77,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: build gradle
-        run: |
-          cd backend
-          ./gradlew build -x test
-          docker build -t todo .
+      - name: Build frontend
+        run: make build-image
+#      - name: build gradle
+#        run: |
+#          cd backend
+#          ./gradlew build -x test
+#
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image

@@ -4,7 +4,13 @@ goal: dependancy
 dependancy:build
 	echo "Get ready"
 
-build:
+build-image:build-backend
+	cd backend && docker build -t todo .
+
+build-backend:build-frontend
+	cd backend && ./gradlew build
+
+build-frontend:
 	echo "frontend build*************";
 	cd frontend && npm run build;
 	cp -rf frontend/dist/* backend/src/main/resources/static
