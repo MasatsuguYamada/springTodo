@@ -12,6 +12,7 @@ import kotlin.test.Test
 
 class DynamoDbTests {
 
+
     @Test
     fun test() {
         val client = DynamoDbClient.builder()
