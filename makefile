@@ -4,7 +4,7 @@ goal: dependancy
 dependancy:build
 	echo "Get ready"
 
-build:test-all
+build:
 	echo "frontend build*************";
 	cd frontend && npm run build;
 	cp -rf frontend/dist/* backend/src/main/resources/static

@@ -55,6 +55,9 @@ jobs:
       - name: Run Tests
         run: make test-all
 
+      - name: Build frontend
+        run: make build
+
 
   deploy:
     name: Deploy
@@ -77,9 +80,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: build frontend
-        run: make build
 
       - name: build gradle
         run: |
