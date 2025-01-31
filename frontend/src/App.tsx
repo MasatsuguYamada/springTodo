@@ -33,20 +33,21 @@ function App() {
   return (
     <>
       <h1>Todo List</h1>
+      <h1>Thank you Greg</h1>
       {allItems.map((todoItem, index) => {
         return (
-            <div key={index}>
-              <div style={{display: 'inline', marginRight: '20px' }}
-                   onClick={() => {
-                     todoItemClick(todoItem)
-                   }}>Item{index + 1} : {todoItem.text}
-              </div>
-              <div style={{display: 'inline'}}
-                   onClick={() => {
-
-                   }}>
-              </div>
+          <div key={index}>
+            <div style={{display: 'inline', marginRight: '20px'}}
+                 onClick={() => {
+                   todoItemClick(todoItem)
+                 }}>Item{index + 1} : {todoItem.text}
             </div>
+            <div style={{display: 'inline'}}
+                 onClick={() => {
+
+                 }}>
+            </div>
+          </div>
         )
       })}
       <div>
@@ -70,7 +71,7 @@ function App() {
             </> : <>
               <button onClick={() => {
                 axios.delete(`/todo/${pk}`)
-                  .then(()=>{
+                  .then(() => {
                     setIsTextClick(false)
                     setText("")
                     setIsButtonClick(!isButtonClick)

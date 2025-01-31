@@ -1,16 +1,23 @@
 goal: dependancy
 	echo "In makefile"
 
-dependancy: test-all
+dependancy:build
 	echo "Get ready"
+
+build:test-all
+	echo "frontend build*************";
+	cd frontend && npm run build;
+	cp -rf frontend/dist/* backend/src/main/resources/static
 
 test-all:test-backend test-frontend
 
 test-backend: start-docker-compose
-	echo "test-backend start" && cd backend && ./gradlew test
+	echo "backend test*************";
+	cd backend && ./gradlew test
 
 start-docker-compose:
 	docker compose up -d
 
 test-frontend:
+	echo "frontend test*************"
 	cd frontend && npm install && npm run test
