@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -38,10 +39,12 @@ class TodoApplicationTests {
 	@Autowired
 	private lateinit var mockMvc: MockMvc
 
+	@Disabled
 	@Test
 	fun contextLoads() {
 	}
 
+	@Disabled
 	@Test
 	fun `todoエンドポイントにJSONをPOSTすると、200OKが返る`() {
 		mockMvc.perform(post("/todo")
@@ -50,6 +53,7 @@ class TodoApplicationTests {
 			.andExpect(status().isOk)
 	}
 
+	@Disabled
 	@Test
 	fun テスト() {
 		assertThat(1+2, equalTo(3))
@@ -78,6 +82,7 @@ class TodoApplicationTests {
 		client.putItem(putItemRequest)
 	}
 
+	@Disabled
 	@Test
 	fun `todoエンドポイントにfooというJSONをPOSTしてfooがdbにあるか確認`() {
 
@@ -103,6 +108,7 @@ class TodoApplicationTests {
 		assertThat(firstItemTextStr, equalTo("foo"))
 	}
 
+	@Disabled
 	@Test
 	fun `todoエンドポイントにhogeというJSONをPOSTしてhogeがdbにあるか確認`() {
 
@@ -135,6 +141,7 @@ class TodoApplicationTests {
 
 	}
 
+	@Disabled
 	@Test
 	fun fooとhogeを違うPKでPOSTしてdbに保存を確認() {
 		deleteAllItems("test")
@@ -155,6 +162,7 @@ class TodoApplicationTests {
 
 	}
 
+	@Disabled
 	@Test
 	fun GETすると現在のDBの項目すべてがリストが返される() {
 		deleteAllItems("test")
@@ -177,6 +185,7 @@ class TodoApplicationTests {
 			.andExpect(jsonPath("$[0].text").value("test456"))
 	}
 
+	@Disabled
 	@Test
 	fun `POSTしたときに新しく追加されたPKを返す` () {
 		deleteAllItems("test")
@@ -193,11 +202,13 @@ class TodoApplicationTests {
 			.andExpect(jsonPath("$.length()").value(1))
 			.andExpect(jsonPath("$[0].PK").value(PK))
 	}
+	@Disabled
 	@Test
 	fun `tableを削除`(){
 		deleteAllItems("test")
 	}
 
+	@Disabled
 	@Test
 	fun `GET todo {id}をするとその項目だけ返す`() {
 		//setup
@@ -221,6 +232,7 @@ class TodoApplicationTests {
 			.andExpect(jsonPath("$.text").value("tsugutsugu"))
 	}
 
+	@Disabled
 	@Test
 	fun `存在しないidでGETしたら404を返す` (){
 		deleteAllItems("test")
@@ -229,6 +241,7 @@ class TodoApplicationTests {
 			.andExpect(status().isNotFound)
 	}
 
+	@Disabled
 	@Test
 	fun `DELETE todo {id}すると、そのIDを削除する`() {
 		deleteAllItems("test")

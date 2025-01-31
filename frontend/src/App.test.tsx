@@ -16,7 +16,7 @@ describe("App", () => {
 
   test("MAINページを開く", () => {
     render(<App/>)
-    expect(screen.getByText("MAIN PAGE")).not.toBeNull()
+    expect(screen.getByText("Todo List")).not.toBeNull()
   })
 
   test("given getTodos has items when render app then see todo item", async () => {
@@ -30,7 +30,7 @@ describe("App", () => {
     render(<App/>)
 
     await waitFor(()=>{
-      expect(screen.getByText("Hello World")).not.toBeNull()
+      expect(screen.getByText(/Hello World/)).not.toBeNull()
       expect(spyGet).toHaveBeenCalledWith("/todo")
     })
   })
@@ -41,7 +41,7 @@ describe("App", () => {
     render(<App/>)
 
     await userEvent.type(screen.getByRole("textbox"), "Hello World")
-    await userEvent.click(screen.getByRole("button", {name: "Submit"}))
+    await userEvent.click(screen.getByRole("button", {name: "追加"}))
 
     expect(spyPost).toHaveBeenCalledWith("/todo", {text: "Hello World"})
     expect(screen.getByRole("textbox").getAttribute("value")).toEqual("")
@@ -50,17 +50,17 @@ describe("App", () => {
   test("write todo item and click submit then see new todo data", async() => {
     const spyGet = vi.spyOn(axios, "get")
       .mockResolvedValueOnce({data: []})
-      .mockResolvedValueOnce({data: [{pk: "1000001", text: "Hello World"}]})
+      .mockResolvedValue({data: [{pk: "1000001", text: "Hello World"}]})
 
     vi.spyOn(axios, "post").mockResolvedValue(undefined)
     render(<App/>)
 
     await userEvent.type(screen.getByRole("textbox"), "Hello World")
-    await userEvent.click(screen.getByRole("button", {name: "Submit"}))
+    await userEvent.click(screen.getByRole("button", {name: "追加"}))
 
     await waitFor(() => {
       expect(spyGet).toHaveBeenNthCalledWith(2,"/todo")
-      expect(screen.getByText("Hello World")).not.toBeNull()
+      expect(screen.getByText(/Hello World/)).not.toBeNull()
     })
   })
 

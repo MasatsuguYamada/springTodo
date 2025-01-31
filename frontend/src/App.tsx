@@ -35,7 +35,6 @@ function App() {
       <h1>Todo List</h1>
       {allItems.map((todoItem, index) => {
         return (
-          <>
             <div key={index}>
               <div style={{display: 'inline', marginRight: '20px' }}
                    onClick={() => {
@@ -48,7 +47,6 @@ function App() {
                    }}>
               </div>
             </div>
-          </>
         )
       })}
       <div>
