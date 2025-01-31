@@ -31,7 +31,7 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: AP_NORTHEAST_1                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: ap-northeast-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: tsugu/todo           # set this to your Amazon ECR repository name
   ECS_SERVICE: tsugu-todo-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: tsugu-cluster                 # set this to your Amazon ECS cluster name
