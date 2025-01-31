@@ -5,7 +5,7 @@ dependancy:build
 	echo "Get ready"
 
 build-image:build-backend
-	cd backend && docker build -t todo .
+	docker build -t todo .
 
 build-backend:build-frontend
 	cd backend && ./gradlew build -x test
